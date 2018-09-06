@@ -1,2 +1,2 @@
-import Component from "Core/Component";
+import Component from "./core/Component";
 export { Component };

@@ -1,11 +1,11 @@
 import DiffDOM from "diff-dom";
-import compareArray, { IDiff } from "Util/compareArray";
-import domParser from "Util/domParser";
-import replaceDom from "Util/replaceDom";
-import insertBefore from "Util/insertBefore";
-import insertAfter from "Util/insertAfter";
-import removeDom from "Util/removeDom";
-import filterObj from "Util/filterObject";
+import compareArray, { IDiff } from "../util/compareArray";
+import domParser from "../util/domParser";
+import replaceDom from "../util/replaceDom";
+import insertBefore from "../util/insertBefore";
+import insertAfter from "../util/insertAfter";
+import removeDom from "../util/removeDom";
+import filterObj from "../util/filterObject";
 const config = {
   logDiff: false
 };
