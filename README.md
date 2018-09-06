@@ -1,8 +1,14 @@
-# y-c
+# y-not
 
 ## Notice
 
 STILL UNDER DEVELOPMENT
+
+## Name
+
+Yea I know the repo is called y-component, and the package name is y-not.
+
+Didn't realize there is already one call y-component. And I simply got frustrated about naming.
 
 ## Why
 
@@ -17,9 +23,9 @@ NONE.
 ## Install
 
 ```bash
-npm i -D y-c
+npm i -D y-not
 # or
-yarn add -D y-c
+yarn add -D y-not
 ```
 
 ## Browser support
@@ -33,7 +39,7 @@ IE9+.
 ### Write a component
 
 ```js
-import { Component } from "y-c";
+import { Component } from "y-not";
 
 export default class MyComponent extends Component {
   state = {
@@ -48,7 +54,7 @@ export default class MyComponent extends Component {
 ### Consume components
 
 ```js
-import { Component } from "y-c";
+import { Component } from "y-not";
 import Foo from "./foo";
 import Bar from "./bar";
 
@@ -77,7 +83,7 @@ export default class MyComponent extends Component {
 ### Pass down props
 
 ```js
-import { Component } from "y-c";
+import { Component } from "y-not";
 import Foo from "./foo";
 
 export default class MyComponent extends Component {
@@ -172,10 +178,10 @@ export default class App extends Component {
 
 ### Event handler
 
-There is no event system for y-c. But property `ref` could be used for such case.
+There is no event system for y-not. But property `ref` could be used for such case.
 
 ```js
-import { Component } from "y-c";
+import { Component } from "y-not";
 export default class MyComponent extends Component {
   state = {
     count: 0
@@ -197,7 +203,7 @@ export default class MyComponent extends Component {
 }
 ```
 
-> Yes, lack of event system make it hard to scale when things get complicated. But do notice y-c _does not_ target for such scenario. Use React, Vue, Angular or other amazing frameworks instead.
+> Yes, lack of event system make it hard to scale when things get complicated. But do notice y-not _does not_ target for such scenario. Use React, Vue, Angular or other amazing frameworks instead.
 
 ## API
 
