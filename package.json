@@ -16,6 +16,10 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
-  }
+    "url": "https://github.com/liuyuchenzh/y-component.git"
+  },
+  "bugs": {
+    "url": "https://github.com/liuyuchenzh/y-component/issues"
+  },
+  "homepage": "https://github.com/liuyuchenzh/y-component"
 }
