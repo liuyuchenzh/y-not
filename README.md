@@ -1,4 +1,4 @@
-# y-component
+# yComponent
 
 ## Notice
 
@@ -17,9 +17,9 @@ NONE.
 ## Install
 
 ```bash
-npm i -D y-component
+npm i -D yComponent
 # or
-yarn add -D y-component
+yarn add -D yComponent
 ```
 
 ## Browser support
@@ -33,7 +33,7 @@ IE9+.
 ### Write a component
 
 ```js
-import { Component } from "y-component";
+import { Component } from "yComponent";
 
 export default class MyComponent extends Component {
   state = {
@@ -48,7 +48,7 @@ export default class MyComponent extends Component {
 ### Consume components
 
 ```js
-import { Component } from "y-component";
+import { Component } from "yComponent";
 import Foo from "./foo";
 import Bar from "./bar";
 
@@ -77,7 +77,7 @@ export default class MyComponent extends Component {
 ### Pass down props
 
 ```js
-import { Component } from "y-component";
+import { Component } from "yComponent";
 import Foo from "./foo";
 
 export default class MyComponent extends Component {
@@ -172,10 +172,10 @@ export default class App extends Component {
 
 ### Event handler
 
-There is no event system for y-component. But property `ref` could be used for such case.
+There is no event system for yComponent. But property `ref` could be used for such case.
 
 ```js
-import { Component } from "y-component";
+import { Component } from "yComponent";
 export default class MyComponent extends Component {
   state = {
     count: 0
@@ -197,7 +197,7 @@ export default class MyComponent extends Component {
 }
 ```
 
-> Yes, lack of event system make it hard to scale when things get complicated. But do notice y-component _does not_ target for such scenario. Use React, Vue, Angular or other amazing frameworks instead.
+> Yes, lack of event system make it hard to scale when things get complicated. But do notice yComponent _does not_ target for such scenario. Use React, Vue, Angular or other amazing frameworks instead.
 
 ## API
 

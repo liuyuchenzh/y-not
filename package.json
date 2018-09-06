@@ -1,12 +1,12 @@
 {
-  "name": "y-component",
+  "name": "yComponent",
   "version": "0.1.0",
   "main": "dist/index.js",
   "umd:main": "dist/index.umd.js",
   "module": "dist/index.m.js",
   "source": "src/index.ts",
   "author": {
-    "name": "liuyuchenzh",
+    "name": "Yuchen Liu",
     "email": "liuyuchenzh@163.com"
   },
   "license": "MIT",
