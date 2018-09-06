@@ -1,4 +1,4 @@
-# yComponent
+# y-c
 
 ## Notice
 
@@ -17,9 +17,9 @@ NONE.
 ## Install
 
 ```bash
-npm i -D yComponent
+npm i -D y-c
 # or
-yarn add -D yComponent
+yarn add -D y-c
 ```
 
 ## Browser support
@@ -33,7 +33,7 @@ IE9+.
 ### Write a component
 
 ```js
-import { Component } from "yComponent";
+import { Component } from "y-c";
 
 export default class MyComponent extends Component {
   state = {
@@ -48,7 +48,7 @@ export default class MyComponent extends Component {
 ### Consume components
 
 ```js
-import { Component } from "yComponent";
+import { Component } from "y-c";
 import Foo from "./foo";
 import Bar from "./bar";
 
@@ -77,7 +77,7 @@ export default class MyComponent extends Component {
 ### Pass down props
 
 ```js
-import { Component } from "yComponent";
+import { Component } from "y-c";
 import Foo from "./foo";
 
 export default class MyComponent extends Component {
@@ -172,10 +172,10 @@ export default class App extends Component {
 
 ### Event handler
 
-There is no event system for yComponent. But property `ref` could be used for such case.
+There is no event system for y-c. But property `ref` could be used for such case.
 
 ```js
-import { Component } from "yComponent";
+import { Component } from "y-c";
 export default class MyComponent extends Component {
   state = {
     count: 0
@@ -197,7 +197,7 @@ export default class MyComponent extends Component {
 }
 ```
 
-> Yes, lack of event system make it hard to scale when things get complicated. But do notice yComponent _does not_ target for such scenario. Use React, Vue, Angular or other amazing frameworks instead.
+> Yes, lack of event system make it hard to scale when things get complicated. But do notice y-c _does not_ target for such scenario. Use React, Vue, Angular or other amazing frameworks instead.
 
 ## API
 

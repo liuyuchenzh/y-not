@@ -1,5 +1,5 @@
 {
-  "name": "yComponent",
+  "name": "y-c",
   "version": "0.1.0",
   "main": "dist/index.js",
   "umd:main": "dist/index.umd.js",
