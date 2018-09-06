@@ -5,6 +5,10 @@
   "umd:main": "dist/index.umd.js",
   "module": "dist/index.m.js",
   "source": "src/index.ts",
+  "author": {
+    "name": "Yuchen Liu",
+    "email": "liuyuchenzh@gmail.com"
+  },
   "license": "MIT",
   "devDependencies": {
     "diff-dom": "^2.4.0",
