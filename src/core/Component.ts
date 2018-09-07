@@ -323,7 +323,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
       // if have elements, then replace
       // or leave it be
       if (replaceElement) {
-        const target: HTMLElement | null = this.ref.querySelector(name);
+        const target: HTMLElement | null = ref.querySelector(name);
         if (target) {
           replaceDom(target, replaceElement);
         }
