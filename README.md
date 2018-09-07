@@ -119,6 +119,34 @@ export default class MyComponent extends Component {
 }
 ```
 
+### Render list
+
+```js
+class Item extends Component {
+  render() {
+    return `<li>${this.props.text}</li>`;
+  }
+}
+class App extends Component {
+  state = {
+    list: ["a", "b", "c"]
+  };
+  components() {
+    const list = this.state.list.map(text =>
+      new Item({
+        props: () => {
+          return { text };
+        }
+      }).init()
+    );
+    return { list };
+  }
+  render() {
+    return "<ul><list></list></ul>"
+  }
+}
+```
+
 ### Render root
 
 ```js
