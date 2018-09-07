@@ -89,7 +89,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
   }
 
   public render(): string {
-    return "<div/>";
+    return "<div></div>";
   }
 
   // update state
