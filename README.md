@@ -32,6 +32,8 @@ yarn add -D y-not
 
 IE9+.
 
+> IE8+ if adding `jQuery` + `JSON` shim to your page
+
 > Need to include polyfill like `@babel/polyfill` yourself if targeting non-es6 compatible browsers. Or just use [Polyfill.io](https://polyfill.io/v2/docs/)
 
 ## Usage

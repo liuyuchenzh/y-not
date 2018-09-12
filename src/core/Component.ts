@@ -6,6 +6,7 @@ import insertBefore from "../util/insertBefore";
 import insertAfter from "../util/insertAfter";
 import removeDom from "../util/removeDom";
 import filterObj from "../util/filterObject";
+import selectDom from "../util/selectDom";
 const config = {
   logDiff: false
 };
@@ -161,7 +162,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
     if (!isRoot) {
       return;
     }
-    document.querySelector(el).append(this.ref);
+    (selectDom(el) as HTMLElement).appendChild(this.ref);
     // mount
     if (!this.mounted) {
       this.mount();
@@ -230,7 +231,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
         // deal with add
         if (add.length && add.length === len + oldLen) {
           // 0 -> n
-          const target: HTMLElement | null = this.ref.querySelector(name);
+          const target: HTMLElement | null = selectDom(name, this.ref);
           if (target) {
             replaceDom(target, component.map(c => c.ref));
           }
@@ -323,7 +324,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
       // if have elements, then replace
       // or leave it be
       if (replaceElement) {
-        const target: HTMLElement | null = ref.querySelector(name);
+        const target: HTMLElement | null = selectDom(name, ref);
         if (target) {
           replaceDom(target, replaceElement);
         }
