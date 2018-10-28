@@ -2,6 +2,10 @@ export default function insertAfter(
   ref: HTMLElement,
   newDom: HTMLElement
 ): void {
+  if ("jQuery" in window) {
+    $(newDom).insertAfter(ref);
+    return;
+  }
   const parent: HTMLElement | null = ref.parentElement;
   if (!parent) {
     return;

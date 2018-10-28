@@ -38,21 +38,35 @@ interface IComponentsHash {
   [name: string]: Base | Base[];
 }
 
+interface IProps<P = {}> {
+  props?: () => P;
+}
+
+interface IComponentOption<P = {}> extends IProps<P> {
+  el?: string;
+  fnComponent?: () => string;
+}
+
+// convert functional component to class
+const convertFnToClass = (component: Base | (() => string)) => {
+  if (component instanceof Base) {
+    return component;
+  }
+  return new Base({
+    fnComponent: component
+  }).init();
+};
+
 export default class Base<P extends IObj = {}, S extends IObj = {}> {
   public ref!: HTMLElement;
   public parent: Base | null = null;
-  public renderOption: IObj = {};
+  public renderOption!: IComponentOption<P>;
   public state!: Readonly<S>;
   public props: P = {} as P;
   public lastRenderSnapshot: string = "";
   public lastComponentsSnapshot: IComponentsHash = {};
   public mounted: boolean = false;
-  constructor(
-    option: {
-      el?: string;
-      props?: () => P;
-    } = {}
-  ) {
+  constructor(option: IComponentOption<P> = {}) {
     // cache option
     this.renderOption = option;
     this.initProps(option.props);
@@ -61,7 +75,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
   // constructor -> render -> didMount
   public init() {
     // cache result
-    this.lastComponentsSnapshot = this.components();
+    this.lastComponentsSnapshot = this.safeComponents();
     // update DOM
     this.update();
     // cache render
@@ -89,7 +103,11 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
     return;
   }
 
-  public render(): string {
+  public render(props = this.props, state = this.state): string {
+    // handle functional component
+    if (this.renderOption.fnComponent) {
+      return this.renderOption.fnComponent();
+    }
     return "<div></div>";
   }
 
@@ -162,7 +180,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
     if (!isRoot) {
       return;
     }
-    (selectDom(el) as HTMLElement).appendChild(this.ref);
+    (selectDom(el as string) as HTMLElement).appendChild(this.ref);
     // mount
     if (!this.mounted) {
       this.mount();
@@ -177,7 +195,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
   }
 
   private updateChildren() {
-    const hash: IComponentsHash = this.components();
+    const hash: IComponentsHash = this.safeComponents();
     // no children, early exit
     if (!this.hasChildren(hash)) {
       return;
@@ -287,6 +305,21 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
     hash: IComponentsHash = this.lastComponentsSnapshot
   ): boolean {
     return Object.keys(hash).length > 0;
+  }
+
+  // handle component in function type
+  private safeComponents(): IComponentsHash {
+    return Object.entries(this.components()).reduce(
+      (last: IComponentsHash, [name, component]) => {
+        if (Array.isArray(component)) {
+          last[name] = component.map(convertFnToClass);
+        } else {
+          last[name] = convertFnToClass(component);
+        }
+        return last;
+      },
+      {}
+    );
   }
 
   // assign parent

@@ -1,2 +1,3 @@
 import Component from "./core/Component";
-export { Component };
+import { render } from "./core/render";
+export { Component, render };

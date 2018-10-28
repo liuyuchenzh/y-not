@@ -82,6 +82,30 @@ export default class MyComponent extends Component {
 
 > _Do not_ use self close component (custom element) since it is not supported by browsers.
 
+### Functional Component
+
+```js
+function Child(props) {
+  return `<div>${props.content}</div>`;
+}
+
+class Parent extends Component {
+  state = {
+    content: "child content"
+  }
+  components() {
+    return {
+      child: () => Child({content: this.state.content});
+    }
+  }
+  render() {
+    return `<div><child></child></div>`
+  }
+}
+```
+
+> Caveat: You _cannot_ handle events within functional component for now!
+
 ### Pass down props
 
 ```js
@@ -144,7 +168,7 @@ class App extends Component {
     return { list };
   }
   render() {
-    return "<ul><list></list></ul>"
+    return "<ul><list></list></ul>";
   }
 }
 ```

@@ -1,5 +1,8 @@
 import matchEl from "./matchEl";
 export default function domParser(dom: string): HTMLElement {
+  if ("jQuery" in window) {
+    return $(dom)[0];
+  }
   const match = matchEl(dom.trim());
   if (!match) {
     throw new Error(`source: ${dom}; Not a valid element! check render()`);
