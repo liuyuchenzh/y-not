@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es3",
     "module": "esnext",
     "lib": ["es2017", "dom"],
     "moduleResolution": "node",
@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "experimentalDecorators": true,
-    "allowJs": false,
+    "allowJs": false
   },
   "include": ["src/**/*", "types/**/*"]
 }
