@@ -176,10 +176,9 @@ class App extends Component {
 ### Render root
 
 ```js
+import { render } from "y-not";
 import Root from "./your-root-component";
-const root = new Root({
-  el: "#app"
-}).init();
+render("#app", Root);
 ```
 
 In your html:
