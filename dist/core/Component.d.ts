@@ -4,8 +4,9 @@ interface IObj {
 interface IComponentsHash {
     [name: string]: Base | Base[];
 }
+declare type Prop<P = {}> = (() => P) | P;
 interface IProps<P = {}> {
-    props?: () => P;
+    props?: Prop<P>;
 }
 interface IComponentOption<P = {}> extends IProps<P> {
     el?: string;

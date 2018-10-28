@@ -82,7 +82,9 @@ export default class MyComponent extends Component {
 
 > _Do not_ use self close component (custom element) since it is not supported by browsers.
 
-### Functional Component
+> For components defined in class, `init` method has to be called.
+
+### Functional component
 
 ```js
 function Child(props) {
@@ -104,7 +106,10 @@ class Parent extends Component {
 }
 ```
 
-> Caveat: You _cannot_ handle events within functional component for now!
+Caveats:
+
+- You _cannot_ handle events within functional component for now!
+- _Cannot_ register child components.
 
 ### Pass down props
 
@@ -118,12 +123,10 @@ export default class MyComponent extends Component {
   };
   timer = 0;
   components() {
-    // props needs to be a function that returns an object
+    // props could also to be a function that returns an object
     const foo = new Foo({
-      props: () => {
-        return {
-          value: this.state.value
-        };
+      props: {
+        value: this.state.value
       }
     }).init();
     return {
@@ -145,6 +148,8 @@ export default class MyComponent extends Component {
 }
 ```
 
+> `props` can also be a function that returns an object.
+
 ### Render list
 
 ```js
@@ -160,9 +165,7 @@ class App extends Component {
   components() {
     const list = this.state.list.map(text =>
       new Item({
-        props: () => {
-          return { text };
-        }
+        props: { text }
       }).init()
     );
     return { list };

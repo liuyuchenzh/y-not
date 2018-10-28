@@ -38,8 +38,10 @@ interface IComponentsHash {
   [name: string]: Base | Base[];
 }
 
+type Prop<P = {}> = (() => P) | P;
+
 interface IProps<P = {}> {
-  props?: () => P;
+  props?: Prop<P>;
 }
 
 interface IComponentOption<P = {}> extends IProps<P> {
@@ -391,15 +393,16 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
     return renderResult !== this.lastRenderSnapshot;
   }
 
-  private initProps(props?: () => P) {
+  private initProps(props?: Prop<P>) {
     if (!props) {
       return;
     }
-    if (props && typeof props === "function") {
-      this.propsFunc = props;
-      this.props = props();
+    if (typeof props === "function") {
+      this.propsFunc = props as () => P;
+      this.props = (props as () => P)();
     } else {
-      console.log("props should be function!");
+      this.props = props;
+      this.propsFunc = () => props;
     }
   }
 
