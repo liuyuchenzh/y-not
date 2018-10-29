@@ -33,24 +33,31 @@ const filterOutInstance = filterObj(([_, v]) => {
 interface IObj {
   [index: string]: any;
 }
+// props type
+type Prop<P> = (() => P) | P;
+interface IProp<P> {
+  props?: Prop<P>;
+}
 
+type FnComponent = () => string;
+
+// For components method, accept both Base and FnComponent
+interface IComponentsRawHash {
+  [name: string]: Base | FnComponent | Array<Base | FnComponent>;
+}
+
+// convert all components to Base | Base[]
 interface IComponentsHash {
   [name: string]: Base | Base[];
 }
 
-type Prop<P = {}> = (() => P) | P;
-
-interface IProps<P = {}> {
-  props?: Prop<P>;
-}
-
-interface IComponentOption<P = {}> extends IProps<P> {
+interface IComponentOption<P> extends IProp<P> {
   el?: string;
-  fnComponent?: () => string;
+  fnComponent?: FnComponent;
 }
 
 // convert functional component to class
-const convertFnToClass = (component: Base | (() => string)) => {
+const convertFnToClass = (component: Base | FnComponent): Base => {
   if (component instanceof Base) {
     return component;
   }
@@ -85,7 +92,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
     return this;
   }
 
-  public components(): IComponentsHash {
+  public components(): IComponentsRawHash {
     return {};
   }
 
@@ -298,6 +305,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
         });
       } else if (!Array.isArray(component) && !Array.isArray(oldComponent)) {
         // update single component
+        oldComponent.propsFunc = component.propsFunc;
         oldComponent.update();
       }
     });

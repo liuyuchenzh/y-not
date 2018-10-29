@@ -1,16 +1,20 @@
 interface IObj {
     [index: string]: any;
 }
+declare type Prop<P> = (() => P) | P;
+interface IProp<P> {
+    props?: Prop<P>;
+}
+declare type FnComponent = () => string;
+interface IComponentsRawHash {
+    [name: string]: Base | FnComponent | Array<Base | FnComponent>;
+}
 interface IComponentsHash {
     [name: string]: Base | Base[];
 }
-declare type Prop<P = {}> = (() => P) | P;
-interface IProps<P = {}> {
-    props?: Prop<P>;
-}
-interface IComponentOption<P = {}> extends IProps<P> {
+interface IComponentOption<P> extends IProp<P> {
     el?: string;
-    fnComponent?: () => string;
+    fnComponent?: FnComponent;
 }
 export default class Base<P extends IObj = {}, S extends IObj = {}> {
     ref: HTMLElement;
@@ -23,7 +27,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
     mounted: boolean;
     constructor(option?: IComponentOption<P>);
     init(): this;
-    components(): IComponentsHash;
+    components(): IComponentsRawHash;
     didMount(): void;
     didUpdate(): void;
     willUnMount(): void;
