@@ -1,7 +1,26 @@
-import { Component, render } from "../dist/index.mjs";
+import { Component, render, useState, useEffect } from "../dist/index.mjs";
 
 function Content(props) {
-  return `<div>this is content: ${props.content}</div>`;
+  const [getCount, updateCount] = useState(0);
+  const [getClickCount, updateClickCount] = useState(0);
+  useEffect(ref => {
+    const timer = setInterval(() => {
+      updateCount(getCount() + 1);
+    }, 1000);
+    ref.addEventListener("click", () => {
+      updateClickCount(getClickCount() + 1);
+    });
+    return () => {
+      clearInterval(timer);
+    };
+  });
+
+  return `
+  <div>
+    <p>this is content: ${props.content}</p>
+    <p>count: ${getCount()}</p>
+    <p>click count: ${getClickCount()}</p>
+  </div>`;
 }
 
 class Item extends Component {

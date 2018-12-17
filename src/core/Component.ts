@@ -7,6 +7,7 @@ import insertAfter from "../util/insertAfter";
 import removeDom from "../util/removeDom";
 import filterObj from "../util/filterObject";
 import selectDom from "../util/selectDom";
+import { store } from "../hooks/store";
 const config = {
   logDiff: false
 };
@@ -115,7 +116,26 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
   public render(props = this.props, state = this.state): string {
     // handle functional component
     if (this.renderOption.fnComponent) {
-      return this.renderOption.fnComponent();
+      // empty hooks
+      store.stateList = [];
+      store.effectList = [];
+      // set active
+      store.activeComponent = this;
+      const result: string = this.renderOption.fnComponent();
+      if (!this.mounted) {
+        this.state = store.makeState() as S;
+        store.stateList = [];
+        if (store.effectList.length) {
+          const [didMount, willUnMount] = store.effectList.pop();
+          if (typeof didMount === "function") {
+            this.didMount = didMount;
+          }
+          if (typeof willUnMount === "function") {
+            this.willUnMount = willUnMount;
+          }
+        }
+      }
+      return result;
     }
     return "<div></div>";
   }

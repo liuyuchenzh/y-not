@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "main": "dist/index.js",
   "umd:main": "dist/index.umd.js",
-  "module": "dist/index.m.js",
+  "module": "dist/index.mjs",
   "source": "src/index.ts",
   "author": {
     "name": "Yuchen Liu",
@@ -11,9 +11,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/jquery": "^3.3.6",
-    "diff-dom": "^2.4.0",
-    "microbundle": "^0.7.0"
+    "@types/jquery": "^3.3.27",
+    "diff-dom": "^2.5.0",
+    "microbundle": "^0.8.3"
   },
   "scripts": {
     "build": "microbundle",

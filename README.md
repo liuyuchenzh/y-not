@@ -261,6 +261,30 @@ export default class MyComponent extends Component {
 
 > Yes, lack of event system make it hard to scale when things get complicated. But do notice y-not _does not_ target for such scenario. Use React, Vue, Angular or other amazing frameworks instead.
 
+### Hooks
+
+```js
+import { useState, useEffect } from "y-not";
+
+function Content(props) {
+  const [getCount, updateCount] = useState(0);
+  useEffect(ref => {
+    ref.addEventListener("click", () => {
+      updateCount(getCount() + 1);
+    });
+  });
+
+  return `
+    <div>
+      <p>count: ${getCount()}</p>
+    </div>`;
+}
+```
+
+> The first element returned by `useState` is a function, which returns the corresponding state value.
+
+> `ref` of the root HTMLElement within the component will be passed in as the first argument in `useEffect`.
+
 ## API
 
 ### Property
