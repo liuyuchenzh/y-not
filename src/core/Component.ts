@@ -27,7 +27,7 @@ const dd = new DiffDOM({
 
 // filter out Component
 const filterOutInstance = filterObj(([_, v]) => {
-  const isInstance: boolean = (v as any) instanceof Base;
+  const isInstance: boolean = (v as any) instanceof Component;
   return !isInstance;
 });
 
@@ -44,12 +44,12 @@ type FnComponent = () => string;
 
 // For components method, accept both Base and FnComponent
 interface IComponentsRawHash {
-  [name: string]: Base | FnComponent | Array<Base | FnComponent>;
+  [name: string]: Component | FnComponent | Array<Component | FnComponent>;
 }
 
 // convert all components to Base | Base[]
 interface IComponentsHash {
-  [name: string]: Base | Base[];
+  [name: string]: Component | Component[];
 }
 
 interface IComponentOption<P> extends IProp<P> {
@@ -58,18 +58,18 @@ interface IComponentOption<P> extends IProp<P> {
 }
 
 // convert functional component to class
-const convertFnToClass = (component: Base | FnComponent): Base => {
-  if (component instanceof Base) {
+const convertFnToClass = (component: Component | FnComponent): Component => {
+  if (component instanceof Component) {
     return component;
   }
-  return new Base({
+  return new Component({
     fnComponent: component
   }).init();
 };
 
-export default class Base<P extends IObj = {}, S extends IObj = {}> {
+export default class Component<P extends IObj = {}, S extends IObj = {}> {
   public ref!: HTMLElement;
-  public parent: Base | null = null;
+  public parent: Component<any, any> | null = null;
   public renderOption!: IComponentOption<P>;
   public state!: Readonly<S>;
   public props: P = {} as P;
@@ -141,11 +141,24 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
   }
 
   // update state
-  public setState<K extends keyof S>(state: Pick<S, K>) {
-    if (!state) {
-      throw new Error("You need to pass in a valid props object");
+  public setState<K extends keyof S>(
+    state: Pick<S, K> | ((prevState: S) => S)
+  ) {
+    let stateToIterate!: Pick<S, K> | S;
+    if (typeof state === "function") {
+      stateToIterate = state(Object.assign({}, this.state));
+    } else {
+      stateToIterate = state;
     }
-    const { newState, hasChanged } = Object.entries(state).reduce(
+    if (!stateToIterate) {
+      throw new Error("invalid state!");
+    }
+    // skip extra reduce
+    if (typeof state === "function") {
+      this.state = stateToIterate as S;
+      return this.update();
+    }
+    const { newState, hasChanged } = Object.entries(stateToIterate).reduce(
       (
         last: {
           newState: Pick<S, K>;
@@ -270,8 +283,8 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
         // update has first class priority
         update.forEach(item => {
           const { index } = item;
-          const c: Base = component[index];
-          const oldC: Base = oldComponent[index];
+          const c: Component = component[index];
+          const oldC: Component = oldComponent[index];
           oldC.propsFunc = c.propsFunc;
           oldC.update();
         });
@@ -288,11 +301,11 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
           const oldEl: HTMLElement[] = oldComponent.map(c => c.ref);
           add.forEach((item, i) => {
             const { index } = item;
-            const newC: Base = component[index];
+            const newC: Component = component[index];
             // add to middle
             if (index < oldLen) {
               insertBefore(oldEl[index], newC.ref);
-              (this.lastComponentsSnapshot[name] as Base[]).splice(
+              (this.lastComponentsSnapshot[name] as Component[]).splice(
                 index + i,
                 0,
                 newC
@@ -304,7 +317,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
                   ? oldComponent[oldLen - 1].ref
                   : component[index - 1].ref;
               insertAfter(ref, newC.ref);
-              (this.lastComponentsSnapshot[name] as Base[])[index] = newC;
+              (this.lastComponentsSnapshot[name] as Component[])[index] = newC;
             }
             // mount
             newC.mount();
@@ -315,8 +328,11 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
         // deal with delete
         del.forEach((item, i) => {
           const { index } = item;
-          const oldC: Base = oldComponent[index];
-          (this.lastComponentsSnapshot[name] as Base[]).splice(index - i, 1);
+          const oldC: Component = oldComponent[index];
+          (this.lastComponentsSnapshot[name] as Component[]).splice(
+            index - i,
+            1
+          );
           oldC.willUnMount();
           if (isEmpty && index === oldLen - 1) {
             return replaceDom(oldC.ref, domParser(name));
@@ -353,7 +369,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
   }
 
   // assign parent
-  private initChild(child: Base) {
+  private initChild(child: Component) {
     child.parent = this;
   }
 
@@ -436,7 +452,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
 
   private updateChain(): void {
     this.didUpdate();
-    if (this.parent && this.parent instanceof Base) {
+    if (this.parent && this.parent instanceof Component) {
       this.parent.updateChain();
     }
   }

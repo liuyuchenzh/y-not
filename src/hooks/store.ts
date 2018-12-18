@@ -1,7 +1,7 @@
 import Component from "../core/Component";
 
 interface IStore {
-  activeComponent: Component | null;
+  activeComponent: Component<any, any> | null;
   componentArray: Component[];
   stateList: any[];
   effectList: any[];

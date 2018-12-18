@@ -13,7 +13,7 @@
   "devDependencies": {
     "@types/jquery": "^3.3.27",
     "diff-dom": "^2.5.0",
-    "microbundle": "^0.8.3"
+    "microbundle": "^0.8.4"
   },
   "scripts": {
     "build": "microbundle",

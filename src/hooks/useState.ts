@@ -20,7 +20,9 @@ export function useState<StateType = any>(
       if (!hasState) {
         return initialState;
       }
-      return (activeComponent.state as any)[index];
+      return (activeComponent.state as {
+        [index: number]: StateType;
+      })[index];
     },
     (newState: any) => {
       if (!activeComponent) {

@@ -7,18 +7,18 @@ interface IProp<P> {
 }
 declare type FnComponent = () => string;
 interface IComponentsRawHash {
-    [name: string]: Base | FnComponent | Array<Base | FnComponent>;
+    [name: string]: Component | FnComponent | Array<Component | FnComponent>;
 }
 interface IComponentsHash {
-    [name: string]: Base | Base[];
+    [name: string]: Component | Component[];
 }
 interface IComponentOption<P> extends IProp<P> {
     el?: string;
     fnComponent?: FnComponent;
 }
-export default class Base<P extends IObj = {}, S extends IObj = {}> {
+export default class Component<P extends IObj = {}, S extends IObj = {}> {
     ref: HTMLElement;
-    parent: Base | null;
+    parent: Component<any, any> | null;
     renderOption: IComponentOption<P>;
     state: Readonly<S>;
     props: P;
@@ -33,7 +33,7 @@ export default class Base<P extends IObj = {}, S extends IObj = {}> {
     willUnMount(): void;
     shouldUpdate(): boolean | void;
     render(props?: P, state?: Readonly<S>): string;
-    setState<K extends keyof S>(state: Pick<S, K>): void;
+    setState<K extends keyof S>(state: Pick<S, K> | ((prevState: S) => S)): void;
     private propsFunc;
     private updateSelf;
     private update;
