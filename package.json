@@ -11,9 +11,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/jquery": "^3.3.27",
+    "@types/jquery": "^3.3.28",
     "diff-dom": "^2.5.0",
-    "microbundle": "^0.8.4"
+    "microbundle": "^0.9.0"
   },
   "scripts": {
     "build": "microbundle",

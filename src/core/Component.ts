@@ -124,7 +124,6 @@ export default class Component<P extends IObj = {}, S extends IObj = {}> {
       const result: string = this.renderOption.fnComponent();
       if (!this.mounted) {
         this.state = store.makeState() as S;
-        store.stateList = [];
         if (store.effectList.length) {
           const [didMount, willUnMount] = store.effectList.pop();
           if (typeof didMount === "function") {
