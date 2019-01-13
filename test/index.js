@@ -1,12 +1,21 @@
 import { Component, render, useState, useEffect } from "../dist/index.mjs";
 
+function useClickState(count = 0) {
+  const [getClickCount, updateClickCount] = useState(count);
+  return [getClickCount, updateClickCount];
+}
+
+function Count(props) {
+  return `<div>count: ${props.count}</div>`;
+}
+
 function Content(props) {
   const [getCount, updateCount] = useState(0);
-  const [getClickCount, updateClickCount] = useState(0);
+  const [getClickCount, updateClickCount] = useClickState(0);
   useEffect(ref => {
     const timer = setInterval(() => {
       updateCount(getCount() + 1);
-    }, 1000);
+    }, 1500);
     ref.addEventListener("click", () => {
       updateClickCount(getClickCount() + 1);
     });
@@ -18,7 +27,7 @@ function Content(props) {
   return `
   <div>
     <p>this is content: ${props.content}</p>
-    <p>count: ${getCount()}</p>
+    ${Count({ count: getCount() })}
     <p>click count: ${getClickCount()}</p>
   </div>`;
 }
