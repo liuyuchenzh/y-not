@@ -1,9 +1,15 @@
 {
-  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "extends": ["tslint:recommended"],
+  "rulesDirectory": [
+    "tslint-plugin-prettier"
+  ],
   "rules": {
+    "prettier": [true, ".prettierrc"],
     "no-var-requires": false,
     "no-console": [false, "log", "error"],
     "object-literal-sort-keys": false,
-    "ordered-imports": false
+    "ordered-imports": false,
+    "trailing-comma": false,
+    "arrow-parens": false
   }
 }
