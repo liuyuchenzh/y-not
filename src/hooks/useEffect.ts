@@ -1,7 +1,7 @@
 import { store } from "./store";
 import Component from "../core/Component";
 
-const defaultFn = () => {};
+const defaultFn = () => void 0;
 
 type EffectHook = (ref: HTMLElement) => any;
 

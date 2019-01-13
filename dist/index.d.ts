@@ -1,5 +1,4 @@
-import Component from "./core/Component";
-import { render } from "./core/render";
-import { useState } from "./hooks/useState";
-import { useEffect } from "./hooks/useEffect";
-export { Component, render, useState, useEffect };
+export { default as Component } from "./core/Component";
+export { render } from "./core/render";
+export { useState } from "./hooks/useState";
+export { useEffect } from "./hooks/useEffect";

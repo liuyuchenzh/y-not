@@ -14,7 +14,7 @@ export const store: IStore = {
   stateList: [],
   effectList: [],
   makeState() {
-    return store.stateList.reduce((last, item, index) => {
+    return store.stateList.reduce((last, item: any, index: number) => {
       return {
         ...last,
         [index]: item
