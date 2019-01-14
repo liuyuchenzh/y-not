@@ -218,7 +218,7 @@ export default class App extends Component {
   components() {
     const child = new Child().init();
     const container = new Container({
-      props: () => {
+      props: {
         children: child
       }
     }).init();
@@ -266,7 +266,7 @@ export default class MyComponent extends Component {
 ```js
 import { useState, useEffect } from "y-not";
 
-function Content(props) {
+function Content() {
   const [getCount, updateCount] = useState(0);
   useEffect(ref => {
     ref.addEventListener("click", () => {
