@@ -43,7 +43,7 @@ interface IProp<P> {
 type FnComponent = () => string;
 
 // For components method, accept both Base and FnComponent
-interface IComponentsRawHash {
+export interface IComponentsRawHash {
   [name: string]: Component | FnComponent | Array<Component | FnComponent>;
 }
 
@@ -76,6 +76,7 @@ export default class Component<P extends IObj = {}, S extends IObj = {}> {
   public lastRenderSnapshot: string = "";
   public lastComponentsSnapshot: IComponentsHash = {};
   public mounted: boolean = false;
+  private preRenderResult: string = "";
   constructor(option: IComponentOption<P> = {}) {
     // cache option
     this.renderOption = option;
@@ -84,6 +85,9 @@ export default class Component<P extends IObj = {}, S extends IObj = {}> {
 
   // constructor -> render -> didMount
   public init() {
+    // preRender so that components can be registered properly
+    // ! hooks will be invoked twice in this way (one more in render)
+    this.preRenderForFunction();
     // cache result
     this.lastComponentsSnapshot = this.safeComponents();
     // update DOM
@@ -117,24 +121,13 @@ export default class Component<P extends IObj = {}, S extends IObj = {}> {
     // handle functional component
     if (this.renderOption.fnComponent) {
       // empty hooks
-      store.stateList = [];
-      store.effectList = [];
+      store.clear();
       // set active
       store.activeComponent = this;
-      const result: string = this.renderOption.fnComponent();
-      if (!this.mounted) {
-        this.state = store.makeState() as S;
-        if (store.effectList.length) {
-          const [didMount, willUnMount] = store.effectList.pop();
-          if (typeof didMount === "function") {
-            this.didMount = didMount;
-          }
-          if (typeof willUnMount === "function") {
-            this.willUnMount = willUnMount;
-          }
-        }
-      }
-      return result;
+      // use preRender result for first time rendering
+      return !this.mounted
+        ? this.preRenderResult
+        : this.renderOption.fnComponent();
     }
     return "<div></div>";
   }
@@ -208,6 +201,8 @@ export default class Component<P extends IObj = {}, S extends IObj = {}> {
       // bind ref
       this.ref = element;
     } else {
+      // for functional components
+      // it is crucial that hasChildren is called after render
       if (this.hasChildren()) {
         // update children first
         // todo: better solution
@@ -370,6 +365,31 @@ export default class Component<P extends IObj = {}, S extends IObj = {}> {
   // assign parent
   private initChild(child: Component) {
     child.parent = this;
+  }
+
+  private preRenderForFunction() {
+    if (
+      this.renderOption.fnComponent &&
+      typeof this.renderOption.fnComponent === "function"
+    ) {
+      store.clear();
+      // set active
+      store.activeComponent = this;
+      // cache result
+      this.preRenderResult = this.renderOption.fnComponent();
+      // init state
+      this.state = store.makeState() as S;
+      // set life cycle hooks
+      if (store.effectList.length) {
+        const [didMount, willUnMount] = store.effectList.pop();
+        if (typeof didMount === "function") {
+          this.didMount = didMount;
+        }
+        if (typeof willUnMount === "function") {
+          this.willUnMount = willUnMount;
+        }
+      }
+    }
   }
 
   // replace custom element with real element

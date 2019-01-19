@@ -1,4 +1,10 @@
-import { Component, render, useState, useEffect } from "../dist/index.mjs";
+import {
+  Component,
+  render,
+  useState,
+  useEffect,
+  register
+} from "../dist/index.mjs";
 
 function useClickState(count = 0) {
   const [getClickCount, updateClickCount] = useState(count);
@@ -6,7 +12,17 @@ function useClickState(count = 0) {
 }
 
 function Count(props) {
-  return `<div>count: ${props.count}</div>`;
+  const [getOwnCount, updateOwnCount] = useState(0);
+  useEffect(ref => {
+    ref.addEventListener("click", () => {
+      updateOwnCount(getOwnCount() + 1);
+    });
+  });
+  return `
+  <div>
+    <p>props count: ${props.count}</p>
+    <p>own count: ${getOwnCount()}</p>
+  </div>`;
 }
 
 function Content(props) {
@@ -16,7 +32,7 @@ function Content(props) {
     const timer = setInterval(() => {
       updateCount(getCount() + 1);
     }, 1500);
-    ref.addEventListener("click", () => {
+    ref.querySelector(".clickP").addEventListener("click", () => {
       updateClickCount(getClickCount() + 1);
     });
     return () => {
@@ -24,12 +40,39 @@ function Content(props) {
     };
   });
 
+  register(() => {
+    return {
+      count: () => Count({ count: getCount() })
+    };
+  });
+
   return `
   <div>
+    <h2>Test of hooks</h2>
     <p>this is content: ${props.content}</p>
-    ${Count({ count: getCount() })}
-    <p>click count: ${getClickCount()}</p>
+    <count></count>
+    <p class="clickP">click count: ${getClickCount()}</p>
   </div>`;
+}
+
+function Input() {
+  const [getVal, updateVal] = useState("");
+  useEffect(ref => {
+    ref.querySelector("input").addEventListener("input", e => {
+      const {
+        target: { value }
+      } = e;
+      updateVal(value);
+    });
+  });
+
+  return `
+  <div>
+    <h2>Test of input</h2>
+    <p><input /></p>
+    <p>mirror: ${getVal()}</p>
+  </div>
+  `;
 }
 
 class Item extends Component {
@@ -56,7 +99,8 @@ class App extends Component {
           }
         }).init()
       ),
-      appcontent: () => Content({ content: this.state.content })
+      appcontent: () => Content({ content: this.state.content }),
+      yinput: () => Input()
     };
   }
   didMount() {
@@ -73,7 +117,9 @@ class App extends Component {
   render() {
     return `
     <main>
+      <yinput></yinput>
       <appcontent></appcontent>
+      <h2>Test of list</h2>
       <list></list>
     </main>
     `;

@@ -38,7 +38,7 @@ IE9+.
 
 ## Usage
 
-### Write a component
+### Class component
 
 ```js
 import { Component } from "y-not";
@@ -53,7 +53,7 @@ export default class MyComponent extends Component {
 }
 ```
 
-### Consume components
+### Consume class components
 
 ```js
 import { Component } from "y-not";
@@ -106,10 +106,32 @@ class Parent extends Component {
 }
 ```
 
-Caveats:
+### Consume component within functional component
 
-- You _cannot_ handle events within functional component for now!
-- _Cannot_ register child components.
+```js
+import { register } from "y-not";
+
+function Child() {
+  return `<div>This is child</div>`;
+}
+
+function Parent() {
+  // make Child a component within Parent
+  register(() => {
+    return {
+      child: () => Child()
+    };
+  });
+
+  return `
+    <div>
+      <child></child>
+    </div>
+  `;
+}
+```
+
+`register` accepts a function that return an object. The keys are the component name, and values are components either in class or function
 
 ### Pass down props
 
@@ -183,6 +205,8 @@ import { render } from "y-not";
 import Root from "./your-root-component";
 render("#app", Root);
 ```
+
+> For the time being, `Root` component has to be written in class manner.
 
 In your html:
 
@@ -285,11 +309,63 @@ function Content() {
 
 > `ref` of the root HTMLElement within the component will be passed in as the first argument in `useEffect`.
 
+Custom hooks are supported:
+
+```js
+import { useState, useEffect } from "y-not";
+
+function useCount(initialValue = 0) {
+  const [getCount, updateCount] = useState(initialValue);
+  return [getCount, updateCount];
+}
+
+function Count() {
+  const [getCount, updateCount] = useCount(1);
+  useEffect(ref => {
+    ref.addEventListener("click", () => {
+      updateCount(getCount() + 1);
+    });
+  });
+
+  return `<div>count: ${getCount()}</div>`;
+}
+```
+
+Hooks with `register` can cover most use cases:
+
+```js
+import { register, useEffect, useState } from "y-not";
+
+function Child(props) {
+  return `<span>${props.content}</span>`;
+}
+
+function Parent() {
+  const [getContent, updateContent] = useState("");
+  useEffect(() => {
+    fetch("/some/api")
+      .then(res => res.json())
+      .then(json => {
+        updateContent(json.content);
+      });
+  });
+  register(() => {
+    return {
+      child: () => Child({ content: getContent() })
+    };
+  });
+
+  return `<div><child></child></div>`;
+}
+```
+
 ## API
 
-### Property
+### Class Component
 
-#### state
+#### Property
+
+##### state
 
 ```ts
 type state = object;
@@ -297,7 +373,7 @@ type state = object;
 
 State for each Component.
 
-#### props
+##### props
 
 ```ts
 type props = object;
@@ -305,7 +381,7 @@ type props = object;
 
 Props that have been passed down.
 
-#### ref
+##### ref
 
 ```ts
 type ref = HTMLElement;
@@ -313,9 +389,9 @@ type ref = HTMLElement;
 
 When mounted, the reference to the container element for each component will be assigned to `ref`.
 
-### Methods
+#### Methods
 
-#### render
+##### render
 
 ```ts
 type render = () => string;
@@ -323,7 +399,7 @@ type render = () => string;
 
 Return the html string of your component.
 
-#### didMount
+##### didMount
 
 ```ts
 type didMount = () => void;
@@ -331,7 +407,7 @@ type didMount = () => void;
 
 Called when component is inserted to DOM.
 
-#### didUpdate
+##### didUpdate
 
 ```ts
 type didUpdate = () => void;
@@ -339,7 +415,7 @@ type didUpdate = () => void;
 
 Called when component get updated(only a change of view would be considered as an update).
 
-#### shouldUpdate
+##### shouldUpdate
 
 ```ts
 type shouldUpdate = () => boolean;
@@ -349,19 +425,22 @@ Force to update the component even if the view doesn't change.
 
 Non Boolean return value would be ignored.
 
-#### willUnMount
+##### willUnMount
 
 Called when the component will unmount. Clear timers here.
 
-#### setState
+##### setState
 
 ```ts
+// pass in an object
 type setState = (state: object) => void;
+// given the old state, return the new one
+type setState = (callback: (oldState: object) => object)
 ```
 
 Update state.
 
-#### components
+##### components
 
 ```ts
 type components = () => { [name: string]: Component };
@@ -371,7 +450,7 @@ Return an object consist of `Component` instances.
 
 The `name` can then be used in the `render` method as a custom element tagName.
 
-### Options
+#### Options
 
 ```js
 const component = new Component(options).init();
@@ -381,7 +460,7 @@ const component = new Component(options).init();
 
 Valid fields for `options` are showed below.
 
-#### [el]
+##### [el]
 
 ```ts
 type el = string;
@@ -389,10 +468,92 @@ type el = string;
 
 Selector for root element.
 
-#### [props]
+##### [props]
 
 ```ts
 type props = () => object;
 ```
 
 Would be passed down as `props` for child component.
+
+### Global API
+
+#### register
+
+To register child component within functional component.
+
+```ts
+import { register } from "y-not";
+
+function Child() {
+  return `<div>This is child</div>`;
+}
+
+function Parent() {
+  // this makes Child a component within Parent
+  register(() => {
+    return {
+      child: () => Child()
+    };
+  });
+
+  return `
+    <div>
+      <child></child>
+    </div>
+  `;
+}
+```
+
+#### useState
+
+Use state within functional component
+
+Returns an array with two function elements, first of which will return the current state value while the second is just like `setState` for class component.
+
+> The second function element (`setState`) can only be passed in an object but not a function.
+
+```ts
+import { useState } from "y-not";
+
+function Component() {
+  const [getContent, updateContent] = useState("content");
+
+  return `<div>${getContent()}</div>`;
+}
+```
+
+#### useEffect
+
+Provide `didMount` and `willUnMount` life cycle to functional element.
+
+Accept one parameter as function, which will act as `didMount` with `ref` as its only parameter.
+
+Such function could return a function, which will act like `willUnMount`.
+
+```ts
+import { useState, useEffect } from "y-not";
+
+function Component() {
+  const [getClick, updateClick] = useState(0);
+  const [getCount, updateCount] = useState(0);
+  useEffect(ref => {
+    ref.addEventListener("click", () => {
+      updateState(getState() + 1);
+    });
+
+    const timer = setInterval(() => {
+      updateCount(getCount() + 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  });
+
+  return `
+  <div>
+    <div>click: ${getClick()}</div>
+    <div>auto count: ${getCount()}</div>
+  </div>
+  `;
+}
+```
