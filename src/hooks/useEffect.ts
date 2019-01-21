@@ -7,6 +7,9 @@ type EffectHook = (ref: HTMLElement) => any;
 
 export function useEffect(didMountHook: EffectHook) {
   const { activeComponent, effectList } = store;
+  if (!activeComponent || activeComponent.mounted) {
+    return;
+  }
   let result = defaultFn;
   function didMount() {
     const ref: HTMLElement = (activeComponent as Component).ref;
