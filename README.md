@@ -539,7 +539,7 @@ function Component() {
   const [getCount, updateCount] = useState(0);
   useEffect(ref => {
     ref.addEventListener("click", () => {
-      updateState(getState() + 1);
+      updateClick(getClick() + 1);
     });
 
     const timer = setInterval(() => {
