@@ -13,11 +13,15 @@ function useClickState(count = 0) {
 
 function Count(props) {
   const [getOwnCount, updateOwnCount] = useState(0);
+
   useEffect(ref => {
     ref.addEventListener("click", () => {
       updateOwnCount(getOwnCount() + 1);
     });
   });
+  if (props.count < 5) {
+    return `<div>default</div>`;
+  }
   return `
   <div>
     <p>props count: ${props.count}</p>

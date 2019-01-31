@@ -1,4 +1,4 @@
-import DiffDOM from "diff-dom";
+import { DiffDOM } from "diff-dom";
 import compareArray, { IDiff } from "../util/compareArray";
 import domParser from "../util/domParser";
 import replaceDom from "../util/replaceDom";
@@ -86,7 +86,6 @@ export default class Component<P extends IObj = {}, S extends IObj = {}> {
   // constructor -> render -> didMount
   public init() {
     // preRender so that components can be registered properly
-    // ! hooks will be invoked twice in this way (one more in render)
     this.preRenderForFunction();
     // cache result
     this.lastComponentsSnapshot = this.safeComponents();
