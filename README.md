@@ -285,6 +285,8 @@ export default class MyComponent extends Component {
 
 > Yes, lack of event system make it hard to scale when things get complicated. But do notice y-not _does not_ target for such scenario. Use React, Vue, Angular or other amazing frameworks instead.
 
+> Extra attention: if the component initially return an empty string, or change the tagName of the containing element during its life cycle, `ref` will lose its functionality, which means using `addEventListener` directly on `this.ref` will break.
+
 ### Hooks
 
 ```js
