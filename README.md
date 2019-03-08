@@ -1,5 +1,7 @@
 # y-not
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/liuyuchenzh/y-component.svg)](https://greenkeeper.io/)
+
 ## Notice
 
 STILL UNDER DEVELOPMENT
